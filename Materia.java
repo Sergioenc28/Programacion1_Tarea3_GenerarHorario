@@ -4,15 +4,23 @@ public class Materia {
     String idMateria;
     String materia;
     String aula;
-    String dias;
     int creditos;
+    boolean dada = false;
 
-    public Materia(String idMateria, String materia, String aula, String dias, int creditos) {
+    public Materia(String idMateria, String materia, String aula, int creditos, boolean dada) {
         this.idMateria = idMateria;
         this.materia = materia;
         this.aula = aula;
-        this.dias = dias;
         this.creditos = creditos;
+        this.dada =  dada;
+    }
+
+    public boolean isDada() {
+        return dada;
+    }
+
+    public void setDada(boolean dada) {
+        this.dada = dada;
     }
 
     public String getIdMateria() {
@@ -37,14 +45,6 @@ public class Materia {
 
     public void setAula(String aula) {
         this.aula = aula;
-    }
-
-    public String getDias() {
-        return dias;
-    }
-
-    public void setDias(String dias) {
-        this.dias = dias;
     }
 
     public int getCreditos() {

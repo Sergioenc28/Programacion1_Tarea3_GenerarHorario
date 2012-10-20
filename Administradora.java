@@ -2,7 +2,6 @@ package administradordehorarios;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
@@ -10,6 +9,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Administradora implements ProfMate{
     String idProfesor;
@@ -17,11 +18,18 @@ public class Administradora implements ProfMate{
     String tanda;
     int horasLaborables;
     int secciones;
+    boolean disponible = true;
+    boolean disponibleLun = true;
+    boolean disponibleMar = true;
+    boolean disponibleMie = true;
+    boolean disponibleJue = true;
+    boolean disponibleVie = true;
+    boolean disponibleSab = true;
     
     Scanner teclado = new Scanner(System.in);
     BufferedReader esc = new BufferedReader(new InputStreamReader(System.in));
     ArrayList<Profesor> listaDeProfesores = new ArrayList<>();
-
+    
     @Override
     public void agregarProfesor() {
         int error =0;
@@ -55,6 +63,11 @@ public class Administradora implements ProfMate{
                         System.out.println("\nUsted excedió el nivel de errores para agregar un nuevo profesor"
                                 + "\nEl sistema volvera el menú INICIO");
                         dameId = false;
+                        sigue=false;
+                    }
+                    if(sigue == false)
+                    {
+                        break;
                     }
                 }
                 else
@@ -63,8 +76,12 @@ public class Administradora implements ProfMate{
                     dameId = false;
                 }
             }
+            if(sigue == false)
+                    {
+                        break;
+                    }
             
-            System.out.println("\nDigite el primer nombre y el primer apellido del nuevo profesor...\nEj: Edgar Garcia");
+            System.out.println("\nDigite el primer nombre y el primer apellido del nuevo profesor...\nEj: Edgar");
             System.out.print("\nEscriba aquí: ");
             
             this.nombre = teclado.next();
@@ -84,13 +101,13 @@ public class Administradora implements ProfMate{
                     {
                         this.tanda = "Matutina";
                         dameTanda = false;
-                        System.out.println("\nMatutita");
+                        System.out.println("\nMatutina");
                     }
                     else if (pa_tanda == 2)
                     {
                         this.tanda = "Vespertina";
                         dameTanda = false;
-                        System.out.println("\nVeespertita");
+                        System.out.println("\nVespertina");
                     }
                     else
                     {
@@ -104,7 +121,12 @@ public class Administradora implements ProfMate{
                             sigue=false;
                         }
                     }
+                    
                 }
+                if(sigue == false)
+                    {
+                        break;
+                    }
             }
             catch(NumberFormatException e)
             {
@@ -117,6 +139,10 @@ public class Administradora implements ProfMate{
                             + "\nEl sistema volverá al menú INICIO");
                 }
             }
+            if(sigue == false)
+                    {
+                        break;
+                    }
             try
             {
                 int pa_horasLaborables;
@@ -153,6 +179,7 @@ public class Administradora implements ProfMate{
                     }
                 }
             }
+            
             catch(NumberFormatException e)
             {
                 System.out.printf("\nPara asignar las horas laborables del profesor "+pa_nombre+" no puede digitar letras..."
@@ -166,7 +193,8 @@ public class Administradora implements ProfMate{
                 }
             }
             
-                Profesor objProfesor = new Profesor(this.idProfesor, this.nombre, this.tanda, this.horasLaborables, this.secciones);
+                Profesor objProfesor = new Profesor(this.idProfesor, this.nombre, this.tanda, this.horasLaborables, this.secciones, this.disponible,this.disponibleLun,this.disponibleMar,this.disponibleMie,this.disponibleJue,this.disponibleVie,this.disponibleSab);
+                
                 listaDeProfesores.add(objProfesor);
             
             //Esto fue probando que las variables se estaba leyendo bien...jeje
@@ -219,6 +247,7 @@ public class Administradora implements ProfMate{
     String aula;
     String dias;
     int creditos;
+    boolean dada = false;
     
     ArrayList<Materia> listaDeMatarias = new ArrayList<>();
     
@@ -232,6 +261,7 @@ public class Administradora implements ProfMate{
         int dime =0;
         int errorMateria=0;
         boolean stop=true;
+        boolean dada = true;
         
         while(stop == true)
         {
@@ -245,17 +275,17 @@ public class Administradora implements ProfMate{
                 System.out.println("Seleccione la materia que desee ingresar de la siguiente lista\n"
                 + "Digite el número de acuerdo a la materia\n");
         
-                System.out.println("No.  Materia             \t\tAula   \t\tCreditos\tDias\t\tCodigo"
-                + "\n1-  Programacion 1\t\t\tCAD\t\t4\t\tMartes\t\tSof-1"
-                + "\n2-  Programacion 2\t\t\t2-1A\t\t4\t\tLunes\t\tSof-2"
-                + "\n3-  Programacion 3\t\t\t4-1C\t\t4\t\tMiercoles\tSof-3"
-                + "\n4-  Introd. a Base de Datos\t\t1-1B\t\t4\t\tJueves\t\tSof-4"
-                + "\n5-  Base de Dato Avanzada\t\t1-1C\t\t4\t\tViernes\t\tSof-5"
-                + "\n6-  Progamacion WEB\t\t\tCAD\t\t4\t\tMartes\t\tSof-6"
-                + "\n7-  Auditoria Informatica\t\tAud-4\t\t4\t\tSabados\t\tSof-7"
-                + "\n8-  Analisis y Diseño\t\t\tAud-2\t\t4\t\tMiercoles\tSof-8"
-                + "\n9-  Estructura de Datos\t\t\t4-1C\t\t4\t\tJueves\t\tSof-9"
-                + "\n10- Introd. a la Ing. de Software\tAud-4\t\t4\t\tLunes\t\tSof-10");
+                System.out.println("No.  Materia             \t\tAula   \t\tCreditos\tCodigo"
+                + "\n1-  Programacion 1\t\t\tCAD\t\t4\t\tSof-1"
+                + "\n2-  Programacion 2\t\t\t2-1A\t\t4\t\tSof-2"
+                + "\n3-  Programacion 3\t\t\t4-1C\t\t4\t\tSof-3"
+                + "\n4-  Introd. a Base de Datos\t\t1-1B\t\t4\t\tSof-4"
+                + "\n5-  Base de Dato Avanzada\t\t1-1C\t\t4\t\tSof-5"
+                + "\n6-  Progamacion WEB\t\t\tCAD\t\t4\t\tSof-6"
+                + "\n7-  Auditoria Informatica\t\tAud-4\t\t4\t\tSof-7"
+                + "\n8-  Analisis y Diseño\t\t\tAud-2\t\t4\t\tSof-8"
+                + "\n9-  Estructura de Datos\t\t\t4-1C\t\t4\t\tSof-9"
+                + "\n10- Introd. a la Ing. de Software\tAud-4\t\t4\t\tSof-10");
                 for (int i = 0; i < 5; i++) {
             System.out.println("");
         }
@@ -273,7 +303,6 @@ public class Administradora implements ProfMate{
                             this.idMateria = "Sof-1";
                             this.aula = "CAD";
                             this.creditos=4;
-                            this.dias = "Martes   ";
                             //stop = false;
                         }
                             break;
@@ -284,7 +313,6 @@ public class Administradora implements ProfMate{
                             this.idMateria = "Sof-2";
                             this.aula = "2-1A";
                             this.creditos=4;
-                            this.dias = "Lunes    ";
                             //stop = false;
                         }
                             break;
@@ -295,7 +323,6 @@ public class Administradora implements ProfMate{
                             this.idMateria = "Sof-3";
                             this.aula = "4-1C";
                             this.creditos=4;
-                            this.dias = "Miercoles";
                             //stop = false;
                         }
                             break;
@@ -306,7 +333,6 @@ public class Administradora implements ProfMate{
                             this.idMateria = "Sof-4";
                             this.aula = "1-1B";
                             this.creditos=4;
-                            this.dias = "Jueves   ";
                             //stop = false;
                         }
                             break;
@@ -317,7 +343,6 @@ public class Administradora implements ProfMate{
                             this.idMateria = "Sof-5";
                             this.aula = "1-1C";
                             this.creditos=4;
-                            this.dias = "Viernes  ";
                             //stop = false;
                         }
                             break;
@@ -328,7 +353,6 @@ public class Administradora implements ProfMate{
                             this.idMateria = "Sof-6";
                             this.aula = "CAD";
                             this.creditos=4;
-                            this.dias = "Martes   ";
                             //stop = false;
                         }
                             break;
@@ -339,7 +363,6 @@ public class Administradora implements ProfMate{
                             this.idMateria = "Sof-7";
                             this.aula = "Aud-4";
                             this.creditos=4;
-                            this.dias = "Sabados  ";
                             //stop = false;
                         }
                             break;
@@ -350,7 +373,6 @@ public class Administradora implements ProfMate{
                             this.idMateria = "Sof-8";
                             this.aula = "Aud-2";
                             this.creditos=4;
-                            this.dias = "MIercoles";
                             //stop = false;
                         }
                             break;
@@ -361,7 +383,6 @@ public class Administradora implements ProfMate{
                             this.idMateria = "Sof-9";
                             this.aula = "4-1C";
                             this.creditos=4;
-                            this.dias = "Jueves   ";
                             //stop = false;
                         }
                             break;
@@ -372,7 +393,6 @@ public class Administradora implements ProfMate{
                             this.idMateria = "Sof-10";
                             this.aula = "Aud-4";
                             this.creditos=4;
-                            this.dias = "Lunes    ";
                             //stop = false;
                         }
                             break;
@@ -392,7 +412,7 @@ public class Administradora implements ProfMate{
                             break;
                         
                     }
-                    Materia objMateria = new Materia(this.idMateria, this.materia, this.aula, this.dias, this.creditos);
+                    Materia objMateria = new Materia(this.idMateria, this.materia, this.aula, this.creditos,this.dada);
                     listaDeMatarias.add(objMateria);
                     
                     System.out.println("La materia se seleccionó correctamente\n\n"
@@ -438,10 +458,442 @@ public class Administradora implements ProfMate{
         
         
     }
-
-    @Override
-    public void generaHorario() {
-       
+    String pa_materiaHorario;
+    String pa_profesorHorario;
+    String pa_tandaHorario;
+    String pa_diaHorario;
+    String pa_aulaHorario;
+    int pa_criditosHorario;
+    
+    
+    
+    //Set<Horarios> listaDeHorarios = new HashSet<>();
+    ArrayList<Horarios> listaDeHorarios = new ArrayList<>();
+    
+    
+    public void generaHorario() 
+    {
+        int totalDeHoras = 0;
+        int totalDeCreditos = 0;
+        boolean agrega=false;
+        for (Profesor prof : listaDeProfesores) {
+            totalDeHoras = totalDeHoras + prof.horasLaborables;
+        }
+        for (Materia mat: listaDeMatarias) {
+            if (mat.dada == false)
+            {
+                totalDeCreditos = totalDeCreditos + mat.creditos;
+            }   
+        }
+        
+        //System.out.println("El total de Creditos es: "+totalDeCreditos);
+        //System.out.println("El total de Horas es: "+totalDeHoras);
+        
+          
+        if (totalDeHoras >= totalDeCreditos)
+        {
+            if(listaDeMatarias.size()>0)
+            {
+                if(listaDeProfesores.size()>0)
+                {
+                    for(Materia m: listaDeMatarias)
+                    {
+			if (m.dada == false)
+                        {
+                            //System.out.println("La materia "+m.materia+" es: "+m.dada);
+                            this.pa_materiaHorario = m.materia;
+                            this.pa_aulaHorario = m.aula;
+                            this.pa_criditosHorario = m.creditos;
+                            m.dada=true;
+                            boolean aulaExiste=false;
+                            /*boolean aulaLun=true;
+                            boolean aulaMar=true;
+                            boolean aulaMie=true;
+                            boolean aulaJue=true;
+                            boolean aulaVie=true;
+                            boolean aulaSab=true;*/
+                            //System.out.println("Se seleccionó una nueva materia y se declararan verdadero todos los dias");
+                            
+                            
+                            //Syestem.out.println("La materia "+m.materia+" es: "+m.dada);
+                            for (Profesor p : listaDeProfesores) 
+                            {
+                            boolean aulaLunMat=true;
+                            boolean aulaMarMat=true;
+                            boolean aulaMieMat=true;
+                            boolean aulaJueMat=true;
+                            boolean aulaVieMat=true;
+                            boolean aulaSabMat=true;
+                            boolean aulaLunVep=true;
+                            boolean aulaMarVep=true;
+                            boolean aulaMieVep=true;
+                            boolean aulaJueVep=true;
+                            boolean aulaVieVep=true;
+                            boolean aulaSabVep=true;
+                            
+                            for(Horarios au: listaDeHorarios)
+                            {
+                                //System.out.println("Verificaremos el aula y la tanda");
+                                //System.out.println("Verificando el aula: "+au.aulaHorario);
+                                if(m.aula.equals(au.aulaHorario))
+                                {
+                                    aulaExiste = true;
+                                    if(aulaExiste == true)
+                                    {
+                                        if(au.diaHorario.equals("Lunes"))
+                                        {
+                                            //aulaLun = false;
+                                            for (Profesor yes : listaDeProfesores) 
+                                            {
+                                                if(au.profesorHorario.equals(yes.nombre))
+                                                {
+                                                    if(yes.tanda.equals("Matutina"))
+                                                    {
+                                                        aulaLunMat = false;
+                                                        //System.out.println("El prof.: "+yes.nombre+" no puede dar clase los: "+au.diaHorario);
+                                                    }
+                                                    if(yes.tanda.equals("Vespertina"))
+                                                    {
+                                                        aulaLunVep =false;
+                                                        //System.out.println("El prof.: "+yes.nombre+" no puede dar clase los: "+au.diaHorario);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else if(au.diaHorario.equals("Martes"))
+                                        {
+                                            //aulaMar = false;
+                                            for (Profesor yes : listaDeProfesores) 
+                                            {
+                                                if(au.profesorHorario.equals(yes.nombre))
+                                                {
+                                                    if(yes.tanda.equals("Matutina"))
+                                                    {
+                                                        aulaMarMat = false;
+                                                        //System.out.println("El prof.: "+yes.nombre+" no puede dar clase los: "+au.diaHorario);
+                                                    }
+                                                    if(yes.tanda.equals("Vespertina"))
+                                                    {
+                                                        aulaMarVep =false;
+                                                        //System.out.println("El prof.: "+yes.nombre+" no puede dar clase los: "+au.diaHorario);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else if(au.diaHorario.equals("Miercoles"))
+                                        {
+                                            //aulaMie = false;
+                                            for (Profesor yes : listaDeProfesores) 
+                                            {
+                                                if(au.profesorHorario.equals(yes.nombre))
+                                                {
+                                                    if(yes.tanda.equals("Matutina"))
+                                                    {
+                                                        aulaMieMat = false;
+                                                        //System.out.println("El prof.: "+yes.nombre+" no puede dar clase los: "+au.diaHorario);
+                                                    }
+                                                    if(yes.tanda.equals("Vespertina"))
+                                                    {
+                                                        aulaMieVep =false;
+                                                        //System.out.println("El prof.: "+yes.nombre+" no puede dar clase los: "+au.diaHorario);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else if(au.diaHorario.equals("Jueves"))
+                                        {
+                                            //aulaJue = false;
+                                            for (Profesor yes : listaDeProfesores) 
+                                            {
+                                                if(au.profesorHorario.equals(yes.nombre))
+                                                {
+                                                    if(yes.tanda.equals("Matutina"))
+                                                    {
+                                                        aulaJueMat = false;
+                                                        //System.out.println("El prof.: "+yes.nombre+" no puede dar clase los: "+au.diaHorario);
+                                                    }
+                                                    if(yes.tanda.equals("Vespertina"))
+                                                    {
+                                                        aulaJueVep =false;
+                                                        //System.out.println("El prof.: "+yes.nombre+" no puede dar clase los: "+au.diaHorario);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else if(au.diaHorario.equals("Viernes"))
+                                        {
+                                            //aulaVie = false;
+                                            for (Profesor yes : listaDeProfesores) 
+                                            {
+                                                if(au.profesorHorario.equals(yes.nombre))
+                                                {
+                                                    if(yes.tanda.equals("Matutina"))
+                                                    {
+                                                        aulaVieMat = false;
+                                                        //System.out.println("El prof.: "+yes.nombre+" no puede dar clase los: "+au.diaHorario);
+                                                    }
+                                                    if(yes.tanda.equals("Vespertina"))
+                                                    {
+                                                        aulaVieVep =false;
+                                                        //System.out.println("El prof.: "+yes.nombre+" no puede dar clase los: "+au.diaHorario);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else if(au.diaHorario.equals("Sabados"))
+                                        {
+                                            //aulaSab = false;
+                                            for (Profesor yes : listaDeProfesores) 
+                                            {
+                                                if(au.profesorHorario.equals(yes.nombre))
+                                                {
+                                                    if(yes.tanda.equals("Matutina"))
+                                                    {
+                                                        aulaSabMat = false;
+                                                        //System.out.println("El prof.: "+yes.nombre+" no puede dar clase los: "+au.diaHorario);
+                                                    }
+                                                    if(yes.tanda.equals("Vespertina"))
+                                                    {
+                                                        aulaSabVep =false;
+                                                        //System.out.println("El prof.: "+yes.nombre+" no puede dar clase los: "+au.diaHorario);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                                
+                                //System.out.println("Trabajando con: "+p.nombre+" para saber si puede dar: "+m.materia);
+                                if("Matutina".equals(p.tanda))
+                                {
+                                    System.out.println("El prof.: "+p.nombre+" No puede dar clase en la tarde");
+                                    aulaLunVep=false;
+                                    aulaMarVep=false;
+                                    aulaMieVep=false;
+                                    aulaJueVep=false;
+                                    aulaVieVep=false;
+                                    aulaSabVep=false;
+                                }
+                                if("Vespertina".equals(p.tanda))
+                                {
+                                    System.out.println("El prof.: "+p.nombre+" No puede dar clase en la Mañana");
+                                    aulaLunMat=false;
+                                    aulaMarMat=false;
+                                    aulaMieMat=false;
+                                    aulaJueMat=false;
+                                    aulaVieMat=false;
+                                    aulaSabMat=false;
+                                }
+                                
+                                
+                                
+                                
+                                if(p.horasLaborables >= m.creditos)
+                                {
+                                    p.disponible = true;
+                                    
+                                    if (p.disponible = true)
+                                    {
+                                        /*System.out.println("Esta disponible el Prof.:"+p.nombre);
+                                        
+                                        System.out.println("Las variables buleanas aula... estan asi:\n"
+                                                + "\n"+aulaLunMat
+                                                + "\n"+aulaLunVep
+                                                + "\n"+aulaMarMat
+                                                + "\n"+aulaMarVep
+                                                + "\n"+aulaMieMat
+                                                + "\n"+aulaJueMat
+                                                + "\n"+aulaJueVep
+                                                + "\n"+aulaVieMat
+                                                + "\n"+aulaVieVep
+                                                + "\n"+aulaSabMat
+                                                + "\n"+aulaSabVep);*/
+                                        if(p.disponibleLun == true & aulaLunMat == true)
+                                        {
+                                            this.pa_profesorHorario = p.nombre;
+                                            this.pa_diaHorario = "Lunes";
+                                            this.pa_tandaHorario = p.tanda;
+                                            p.horasLaborables = p.horasLaborables - m.creditos;
+                                            p.disponibleLun = false;
+                                            agrega=true;
+                                            break;
+                                        }
+                                        else if(p.disponibleLun == true & aulaLunVep == true)
+                                        {
+                                            this.pa_profesorHorario = p.nombre;
+                                            this.pa_diaHorario = "Lunes";
+                                            this.pa_tandaHorario = p.tanda;
+                                            p.horasLaborables = p.horasLaborables - m.creditos;
+                                            p.disponibleLun = false;
+                                            agrega=true;
+                                            break;
+                                        }
+                                        
+                                        else if(p.disponibleMar == true & aulaMarMat == true)
+                                        {
+                                            this.pa_profesorHorario = p.nombre;
+                                            this.pa_diaHorario = "Martes";
+                                            this.pa_tandaHorario = p.tanda;
+                                            p.horasLaborables = p.horasLaborables - m.creditos;
+                                            p.disponibleMar = false;
+                                            agrega=true;
+                                        break;
+                                        }
+                                        else if(p.disponibleMar == true & aulaMarVep == true)
+                                        {
+                                            this.pa_profesorHorario = p.nombre;
+                                            this.pa_diaHorario = "Martes";
+                                            this.pa_tandaHorario = p.tanda;
+                                            p.horasLaborables = p.horasLaborables - m.creditos;
+                                            p.disponibleMar = false;
+                                            agrega=true;
+                                        break;
+                                        }
+                                        
+                                        else if(p.disponibleMie == true & aulaMieMat == true)
+                                        {
+                                            this.pa_profesorHorario = p.nombre;
+                                            this.pa_diaHorario = "Miercoles";
+                                            this.pa_tandaHorario = p.tanda;
+                                            p.horasLaborables = p.horasLaborables - m.creditos;
+                                            p.disponibleMie = false;
+                                            agrega=true;
+                                        break;
+                                        }
+                                        else if(p.disponibleMie == true & aulaMieVep == true)
+                                        {
+                                            this.pa_profesorHorario = p.nombre;
+                                            this.pa_diaHorario = "Miercoles";
+                                            this.pa_tandaHorario = p.tanda;
+                                            p.horasLaborables = p.horasLaborables - m.creditos;
+                                            p.disponibleMie = false;
+                                            agrega=true;
+                                        break;
+                                        }
+                                        
+                                        else if(p.disponibleJue == true & aulaJueMat == true)
+                                        {
+                                            this.pa_profesorHorario = p.nombre;
+                                            this.pa_diaHorario = "Jueves";
+                                            this.pa_tandaHorario = p.tanda;
+                                            p.horasLaborables = p.horasLaborables - m.creditos;
+                                            p.disponibleJue = false;
+                                            agrega=true;
+                                        break;
+                                        }
+                                        else if(p.disponibleJue == true & aulaJueVep == true)
+                                        {
+                                            this.pa_profesorHorario = p.nombre;
+                                            this.pa_diaHorario = "Jueves";
+                                            this.pa_tandaHorario = p.tanda;
+                                            p.horasLaborables = p.horasLaborables - m.creditos;
+                                            p.disponibleJue = false;
+                                            agrega=true;
+                                        break;
+                                        }
+                                        
+                                        else if(p.disponibleVie == true & aulaVieMat == true)
+                                        {
+                                            this.pa_profesorHorario = p.nombre;
+                                            this.pa_diaHorario = "Viernes";
+                                            this.pa_tandaHorario = p.tanda;
+                                            p.horasLaborables = p.horasLaborables - m.creditos;
+                                            p.disponibleVie = false;
+                                            agrega=true;
+                                        break;
+                                        }
+                                        else if(p.disponibleVie == true & aulaVieVep == true)
+                                        {
+                                            this.pa_profesorHorario = p.nombre;
+                                            this.pa_diaHorario = "Viernes";
+                                            this.pa_tandaHorario = p.tanda;
+                                            p.horasLaborables = p.horasLaborables - m.creditos;
+                                            p.disponibleVie = false;
+                                            agrega=true;
+                                        break;
+                                        }
+                                        
+                                        else if(p.disponibleSab == true & aulaSabMat == true)
+                                        {
+                                            this.pa_profesorHorario = p.nombre;
+                                            this.pa_diaHorario = "Sabados";
+                                            this.pa_tandaHorario = p.tanda;
+                                            p.horasLaborables = p.horasLaborables - m.creditos;
+                                            p.disponibleSab = false;
+                                            agrega=true;
+                                        break;
+                                        }
+                                        else if(p.disponibleSab == true & aulaSabVep == true)
+                                        {
+                                            this.pa_profesorHorario = p.nombre;
+                                            this.pa_diaHorario = "Sabados";
+                                            this.pa_tandaHorario = p.tanda;
+                                            p.horasLaborables = p.horasLaborables - m.creditos;
+                                            p.disponibleSab = false;
+                                            agrega=true;
+                                        break;
+                                        }
+                                    }  
+                                }
+                                /*else
+                                {
+                                    System.out.println("No tiene horas suficientes");
+                                }*/
+                                
+                            }
+                            //break;
+                        }
+                        Horarios objHorario = new Horarios(this.pa_materiaHorario, this.pa_profesorHorario, this.pa_tandaHorario, this.pa_diaHorario, this.pa_aulaHorario, this.pa_criditosHorario);
+                        
+                        if(agrega == true)
+                        {
+                            listaDeHorarios.add(objHorario);
+                        }
+                        
+                        agrega = false;
+                        
+                    }
+                }
+                else
+                {
+                    System.out.println("NO ha registrado profesores...");
+                    //Preguntar si desea agregarlos
+                }
+            }
+            else
+            {
+                System.out.println("NO ha registrado materias...");
+                //Preguntar si desea agregarlas
+            }
+        }
+        else
+        {
+            System.out.println("Los creditos son mayor que las horas laborables de todos los profesores..."
+                    + "\nSe recomienda crear mas profesores...");
+            //Preguntar si desea agregarlos
+        }
+        
+        if(listaDeHorarios.size()>0)
+        {
+            
+            System.out.println("Se genero el Horario...");
+            System.out.println("\n\n\t\t\t\t   Generador de Horarios SyC");
+            System.out.println("\n\t\t\t\t\tHorarios\n\n");
+            System.out.println("Materias\t\t\tProfesores\tAula\tDias\t\tTanda");
+            
+            for (Horarios h: listaDeHorarios) 
+            {
+                System.out.println(h.getMateriaHorario()+"\t"+h.getProfesorHorario()+"\t\t"+h.getAulaHorario()+"\t"
+                        + ""+h.getDiaHorario()+"\t\t"+h.getTandaHorario());
+            }
+        }
+        else
+        {
+            System.out.println("AUN NO SE HA REGISTRADO NINGUN HORARIO...\n"
+                    + "ASEGURECE DE AGREGAR LAS MATERIAS Y LOS PROFESORES...\nLUEGO GENERE EL HORARIO");
+        }
+        
     }
 
     @Override
@@ -449,8 +901,8 @@ public class Administradora implements ProfMate{
         for (int i = 0; i < 10; i++) {
             System.out.println("");
         }
-        System.out.println("Bienvenido al Generador de Horarios SyC");
-        System.out.println("\nListado de Profesores");
+        System.out.println("\t\tBienvenido al Generador de Horarios SyC");
+        System.out.println("\n\t\t   Listado de Profesores Seleccionados\n\n");
         System.out.println("IDs   \t\tNombres\t\tTandas\t\tHoras Laborables\t\t");
         
         for (Profesor profesor : listaDeProfesores) {
@@ -465,15 +917,16 @@ public class Administradora implements ProfMate{
         }
         System.out.println("\t\tBienvenido al Generador de Horarios SyC");
         System.out.println("\n\t\t   Listado de Materias Seleccionadas\n\n");
-        System.out.println("Codigo\tMateria             \t\tAula\t\tDias\t\tCreditos");
+        System.out.println("Codigo\tMateria             \t\tAula\t   Creditos");
         
         for (Materia m : listaDeMatarias) {
-            System.out.println(m.idMateria+"\t"+m.materia+"\t"+m.aula+"\t\t"+m.dias+"\t"+m.creditos);
+            System.out.println(m.idMateria+"\t"+m.materia+"\t"+m.aula+"\t\t"+m.creditos);
         }
     }
 
     @Override
     public void generaPDF() {
+        
         Document doc = new Document();
         
         try
@@ -482,24 +935,27 @@ public class Administradora implements ProfMate{
             doc.open();
             Paragraph escribe = new Paragraph();
             
-            escribe.add("                                                 Generador de Horarios SyC\n");
-            escribe.add("                                                            Programacion 1\n");
+            escribe.add("                                                    Generador de Horarios SyC\n");
+            escribe.add("                                                              Programacion 1\n");
             
-                        
-            for (Materia m : listaDeMatarias) 
+           escribe.add("\n                                                                   Horarios\n\n");
+            escribe.add("      Materias                          Profesores     Aula     Dias     Tanda");
+            
+            for (Horarios h: listaDeHorarios) 
             {
-                escribe.add(("Aquí imprimirá el horario"));
+                escribe.add("\n"+h.getMateriaHorario()+"        "+h.getProfesorHorario()+"     "+h.getAulaHorario()+"     "+h.getDiaHorario()+"     "+h.getTandaHorario());
             }
             
             
             doc.add(escribe);
             doc.close();
-            System.out.println("Se guardo el ejemplo");
+            System.out.println("Se generó el PDF con exito");
             
         }
         catch(Exception e)
+                
         {
-            System.out.println("So Sorry");
+            System.out.println("So Sorry... try again");
         }
     }
     

@@ -1,7 +1,3 @@
-
-//Esta clase fue sustituida por la clase Administradora
-
-
 /*package administradordehorarios;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,11 +9,7 @@ public class AdministraTodo {
     int horasLaborables;
     int secciones;
     
-
     ArrayList<AdministraTodo> todosLosProfesores = new ArrayList<>();//Esto lo hare al final
-
-    ArrayList<AdministraTodo> todosLosProfesores = new ArrayList<>();
-
     
     Scanner teclado = new Scanner(System.in);
     public void crearProfesor(String idProfesor, String nombre, String tanda, int horasLaborables, int secciones)
